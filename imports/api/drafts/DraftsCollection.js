@@ -1,19 +1,22 @@
 import { Mongo } from "meteor/mongo";
+import { User } from "meteor/meteor";
+import SimpleSchema from "simpl-schema";
 
 const Drafts = new Mongo.Collection("drafts");
 Drafts.schema = new SimpleSchema({
   name: { type: String },
-  participants: { type: User },
+  userId: { type: String },
+  participantIds: [String],
 });
 
 export { Drafts };
 
-/* const list = {
+/* const draft = {
     name: 'My list',
-    incompleteCount: 3
+    participants: 3
   };
   
-  Lists.schema.validate(list); */
+  Drafts.schema.validate(draft); */
 
 /*
  cultofcoders:grapher  

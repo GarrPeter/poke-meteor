@@ -1,4 +1,5 @@
 import { Accounts } from "meteor/accounts-base";
+import SimpleSchema from "simpl-schema";
 
 export const meteorAccounts = () => {
   // Ensuring every user has an email address, should be in server-side code
