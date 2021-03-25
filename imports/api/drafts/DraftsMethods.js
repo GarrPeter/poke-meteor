@@ -33,7 +33,7 @@ Meteor.methods({
 
     Drafts.remove(draftId);
   },
-  "drafts.addUser"(userId, draftId) {
+  "drafts.addParticipant"(userId, draftId) {
     check(userId, String);
     check(draftId, String);
 
@@ -51,9 +51,36 @@ Meteor.methods({
     }
 
     Drafts.update(draftId, {
-      /* $set: {
-          isChecked,
-        }, */
+      $push: {
+        participantIds: userId,
+      },
     });
   },
 });
+
+/* const Posts = new Mongo.Collection('posts');
+
+Meteor.methods({
+    posts() {
+        return Posts.find({}, {
+            fields: {
+                title: 1,
+                createdAt: 1,
+                createdBy: 1,
+            }
+        }).fetch();
+    }
+})
+Transforming this into a Grapher query looks like this:
+
+Meteor.methods({
+    posts() {
+        const query = Posts.createQuery({
+            title: 1,
+            createdAt: 1,
+            createdBy: 1,
+        });
+
+        return query.fetch();
+    }
+}) */

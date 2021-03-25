@@ -6,6 +6,7 @@ import { Task } from "./components/Task";
 import { TaskForm } from "./components/TaskForm";
 import { LoginForm } from "./components/LoginForm";
 import { DraftManagement } from "./pages/DraftMangement";
+import { Pokemon } from "/imports/ui/components/Pokemon";
 
 const toggleChecked = ({ _id, isChecked }) => {
   Meteor.call("tasks.setIsChecked", _id, !isChecked);
@@ -70,7 +71,7 @@ export const App = () => {
                 <Route path="/drafts">
                   <DraftManagement user={user} />
                 </Route>
-                <Route path="/">
+                <Route path="/todos">
                   <TaskForm />
                   <div className="filter">
                     <button onClick={() => setHideCompleted(!hideCompleted)}>
@@ -90,6 +91,10 @@ export const App = () => {
                       />
                     ))}
                   </ul>
+                </Route>
+                {/* Default list goes at the bottom. Cause Switch. */}
+                <Route path="/">
+                  <Link to="/drafts">Draft List</Link>
                 </Route>
               </Switch>
             </>
