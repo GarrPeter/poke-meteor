@@ -1,15 +1,15 @@
 // Assets.getText("/some_folder/test.txt");
-import _ from 'underscore'
+import _ from "underscore";
 import { Mongo } from "meteor/mongo";
 import SimpleSchema from "simpl-schema";
-import PokemonTypesEnum from '/imports/api/pokemon/enums/types'
+import PokemonTypesEnum from "/imports/api/pokemon/enums/types";
 
 const Pokemon = new Mongo.Collection("pokemon");
 Pokemon.attachSchema(
   new SimpleSchema({
     name: String,
     num: SimpleSchema.Integer,
-    types: {type: [String], allowedValues: _.values(PokemonTypesEnum),
+    types: { type: [String], allowedValues: _.values(PokemonTypesEnum) },
     abilities: [
       {
         0: String,
