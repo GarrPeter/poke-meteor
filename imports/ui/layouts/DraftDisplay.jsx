@@ -4,6 +4,7 @@ import { useTracker } from "meteor/react-meteor-data";
 import { Drafts } from "/imports/api/drafts/DraftsCollection";
 import { Pokemon } from "/imports/ui/components/Pokemon";
 import { DraftTimer } from "/imports/ui/layouts/DraftTimer";
+// import getPicksFromDraft from "/imports/api/drafts/picks/queries/getPicks";
 
 const draftSubscription = (draftId) =>
   useTracker(() => {
@@ -22,24 +23,22 @@ const getUserList = () => {
   return Meteor.users.find({});
 };
 
-/* import getPostQuery from '/imports/db/posts/queries/getPost';
+/* createContainer(({ draftId }) => {
+  const query = getPicksFromDraft.clone({ draftId });
+  const handle = query.subscribe();
 
-export default createContainer(({postId}) => {
-    const query = getPostQuery.clone({postId});
-    const handle = query.subscribe();
-    
-    return {
-        ready: handle.ready(),
-        post: query.fetchOne(),
-    };
-}) */
+  return {
+    ready: handle.ready(),
+    picks: query.fetch(),
+  };
+}); */
 
 export const DraftDisplay = ({}) => {
   const { draftId } = useParams();
   const isLoading = draftSubscription(draftId) || userSubscription();
   const draft = getDraft(draftId);
   const users = getUserList();
-  //Meteor.user()
+  const pokemonId = "123";
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -71,6 +70,14 @@ export const DraftDisplay = ({}) => {
               ""
             )}
             {user.username}
+            <button
+              onClick={(e) => {
+                e.stopPropagation;
+                Meteor.call("drafts.makePick", { draftId, pokemonId });
+              }}
+            >
+              Make Pick
+            </button>
           </div>
         ))}
       </div>

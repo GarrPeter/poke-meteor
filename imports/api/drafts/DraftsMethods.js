@@ -1,5 +1,7 @@
 import { check } from "meteor/check";
 import { Drafts } from "/imports/api/drafts/DraftsCollection";
+import { Picks } from "/imports/api/drafts/picks/PicksCollection";
+import * as Security from "/imports/api/security";
 
 Meteor.methods({
   "drafts.insert"(name) {
@@ -54,6 +56,18 @@ Meteor.methods({
       $push: {
         participantIds: userId,
       },
+    });
+  },
+  "drafts.makePick"({ draftId, pokemonId }) {
+    check(draftId, String);
+    check(pokemonId, String);
+
+    Security.checkLoggedIn(this);
+
+    Picks.insert({
+      userId: this.userId,
+      draftId: draftId,
+      pokemonId: pokemonId,
     });
   },
 });

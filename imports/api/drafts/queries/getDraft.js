@@ -6,4 +6,8 @@ export default Drafts.createQuery("getDraft", {
   participantIds: {
     name: 1,
   },
+  pickIds: {
+    userId: 1,
+    pokemonId: 1,
+  },
 });
