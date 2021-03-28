@@ -1,5 +1,4 @@
 import { Mongo } from "meteor/mongo";
-import { User } from "meteor/meteor";
 import SimpleSchema from "simpl-schema";
 
 const Drafts = new Mongo.Collection("drafts");

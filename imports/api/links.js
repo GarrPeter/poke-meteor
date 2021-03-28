@@ -28,9 +28,20 @@ Picks.addLinks({
   },
 });
 
+Pokemon.addLinks({
+  picks: {
+    collection: Picks,
+    inversedBy: "pokemon",
+  },
+});
+
 Meteor.users.addLinks({
   drafts: {
     collection: Drafts,
     inversedBy: "participants",
+  },
+  picks: {
+    collection: Picks,
+    inversedBy: "user",
   },
 });

@@ -7,6 +7,7 @@ import { TaskForm } from "./components/TaskForm";
 import { LoginForm } from "./components/LoginForm";
 import { DraftManagement } from "./pages/DraftMangement";
 import { Pokemon } from "/imports/ui/components/Pokemon";
+import { GraphicalGrapherReact } from "meteor/herteby:graphical-grapher";
 
 const toggleChecked = ({ _id, isChecked }) => {
   Meteor.call("tasks.setIsChecked", _id, !isChecked);
@@ -69,6 +70,7 @@ export const App = () => {
               </div>
               <Switch>
                 <Route path="/drafts">
+                  {/* <GraphicalGrapherReact /> */}
                   <DraftManagement user={user} />
                 </Route>
                 <Route path="/todos">

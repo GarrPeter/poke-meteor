@@ -6,11 +6,11 @@ import PokemonTypesEnum from "/imports/api/pokemon/enums/types";
 
 const statsTable = new SimpleSchema({
   hp: Number,
-  attack: Number,
-  defense: Number,
-  specialAttack: Number,
-  specialDefense: Number,
-  speed: Number,
+  atk: Number,
+  def: Number,
+  spa: Number,
+  spd: Number,
+  spe: Number,
 });
 
 const Pokemon = new Mongo.Collection("pokemon");
@@ -20,14 +20,7 @@ Pokemon.attachSchema(
     num: SimpleSchema.Integer,
     types: Array,
     "types.$": { type: String, allowedValues: _.values(PokemonTypesEnum) },
-    abilities: [
-      {
-        0: String,
-        1: { type: String, optional: true },
-        H: { type: String, optional: true },
-        S: { type: String, optional: true },
-      },
-    ],
+    abilities: { type: Object, optional: true },
     baseStats: { type: statsTable },
   })
 );

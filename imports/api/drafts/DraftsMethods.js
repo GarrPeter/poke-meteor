@@ -15,6 +15,7 @@ Meteor.methods({
       name,
       createdAt: new Date(),
       userId: this.userId,
+      participantIds: [],
     });
   },
   "drafts.remove"(draftId) {
@@ -58,17 +59,18 @@ Meteor.methods({
       },
     });
   },
-  "drafts.makePick"({ draftId, pokemonId }) {
+  "drafts.makePick"({ draftId, pokemon }) {
     check(draftId, String);
-    check(pokemonId, String);
+    check(pokemon._id, String);
 
     Security.checkLoggedIn(this);
-
-    Picks.insert({
+    const pick = {
       userId: this.userId,
       draftId: draftId,
-      pokemonId: pokemonId,
-    });
+      pokemonId: pokemon._id,
+    };
+
+    Picks.insert(pick);
   },
 });
 

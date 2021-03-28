@@ -1,5 +1,5 @@
 import React from "react";
 
-export const PokeType = ({}) => {
-  return <div>Type</div>;
+export const PokeType = ({ type }) => {
+  return <div>{type}</div>;
 };

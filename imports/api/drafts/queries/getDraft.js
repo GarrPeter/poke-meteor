@@ -1,12 +1,14 @@
+import { Drafts } from "/imports/api/drafts/DraftsCollection";
+
 export default Drafts.createQuery("getDraft", {
   $filter({ filters, params }) {
     filters._id = params.draftId;
   },
   name: 1,
-  participantIds: {
+  participants: {
     name: 1,
   },
-  pickIds: {
+  picks: {
     userId: 1,
     pokemonId: 1,
   },
