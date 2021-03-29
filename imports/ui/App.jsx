@@ -70,7 +70,6 @@ export const App = () => {
               </div>
               <Switch>
                 <Route path="/drafts">
-                  {/* <GraphicalGrapherReact /> */}
                   <DraftManagement user={user} />
                 </Route>
                 <Route path="/todos">

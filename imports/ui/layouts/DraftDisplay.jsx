@@ -8,6 +8,7 @@ import { Pokemon as PokemonCollection } from "/imports/api/pokemon/PokemonCollec
 import { DraftTimer } from "/imports/ui/layouts/DraftTimer";
 import getPicksFromDraft from "/imports/api/drafts/picks/queries/getPicks";
 import getDraft from "/imports/api/drafts/queries/getDraft";
+import { DraftSettings } from "./DraftSettings";
 
 export const DraftDisplay = ({}) => {
   const { draftId } = useParams();
@@ -36,6 +37,20 @@ export const DraftDisplay = ({}) => {
       users,
     };
   });
+  const { picks, pickedPokemon, isPicksLoading } = useTracker(() => {
+    const query = getPicksFromDraft.clone({ draftId });
+    const handle = query.subscribe();
+
+    if (!handle.ready) {
+      return { picks: [], pickedPokemon: [], isPicksLoading: true };
+    }
+    const results = query.fetch();
+
+    return {
+      picks: results,
+      pickedPokemon: results.map((e) => e.pokemonId),
+    };
+  }, [draftId]);
   const { pokemon, isPokemonLoading } = useTracker(() => {
     const noDataAvailable = { pokemon: [] };
     const handler = Meteor.subscribe("pokemon");
@@ -48,54 +63,62 @@ export const DraftDisplay = ({}) => {
 
     return { pokemon };
   }, []);
-  const { picks, isPicksLoading } = useTracker((draftId) => {
-    const query = getPicksFromDraft.clone();
-    const handle = query.subscribe();
-
-    if (!handle.ready) {
-      return { picks: [], isPicksLoading: true };
-    }
-
-    return {
-      picks: query.fetch(),
-    };
-  }, []);
 
   return (
     <>
-      <h1>{isDraftLoading ? "" : draft._id}</h1>
+      <h1>{isDraftLoading ? "" : draft.name}</h1>
+      <button onClick={Meteor.call("drafts.start", draftId)}>Big Start</button>
       {isPicksLoading
         ? ""
         : picks.map((pick) => {
             if (pick.pokemonId) {
-              return <div key={pick._id}>{pick.pokemonId}</div>;
+              return (
+                <div key={pick._id}>
+                  {pokemon.find((e) => e._id === pick.pokemonId)?.name} -{" "}
+                  {users.find((e) => e._id === pick.userId)?.username}
+                </div>
+              );
             }
           })}
-      <DraftTimer />
+      {isDraftLoading ? (
+        ""
+      ) : (
+        <>
+          <DraftTimer draft={draft} />
+          <DraftSettings draft={draft} />
+        </>
+      )}
+      {users.map((user) => (
+        <div key={user._id}>
+          {!draft.participantIds?.includes(user._id) ? (
+            <button
+              onClick={(e) => {
+                e.stopPropagation;
+                Meteor.call("drafts.addParticipant", user._id, draftId);
+              }}
+            >
+              Add
+            </button>
+          ) : (
+            ""
+          )}
+          {user.username}
+        </div>
+      ))}
       <div>
         {isPokemonLoading
-          ? ""
-          : pokemon.map((mon) => (
-              <Pokemon clickHandler={makePick} key={mon._id} pokemon={mon} />
-            ))}
-
-        {users.map((user) => (
-          <div key={user._id}>
-            {!draft.participantIds?.includes(user._id) ? (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation;
-                  Meteor.call("drafts.addParticipant", user._id, draftId);
-                }}
-              >
-                Add
-              </button>
-            ) : (
-              ""
-            )}
-            {user.username}
-          </div>
-        ))}
+          ? "Pokemon Loading"
+          : pokemon
+              .filter((mon) => pickedPokemon.indexOf(mon._id) == -1)
+              .map((mon) => {
+                return (
+                  <Pokemon
+                    clickHandler={makePick}
+                    key={mon._id}
+                    pokemon={mon}
+                  />
+                );
+              })}
       </div>
     </>
   );
